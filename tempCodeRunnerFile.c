@@ -2,10 +2,6 @@
 int main()
 {
     printf("\nHello world!\n");
-    printf("\nThis is a new day\n");
-    for(int i=0;i<3;i++)
-    {
-        printf("This is supposed to print 3 times.\n");
-    }
+    printf("This is supposed to print in main.c");
     return 0;
 }

@@ -14,7 +14,9 @@ void displaySpaceship() {
     printf("\033[%d;%dH", spaceshipRow, spaceshipCol);
     printf("A");
 }
-
+void clearScreen() {
+    system("cls");
+}
 
 void moveSpaceship(char key) {
     switch (key) {
@@ -73,4 +75,27 @@ void displayAliens() {
             printf("\033[%d;%dHV\n", aliens[i][0], aliens[i][1]);
         }
     }
+}
+void checkCollisions() {
+    for (int i = 0; i < MAX_ALIENS; i++) {
+        // checks if bullet and alien occupy the same position
+        if (aliens[i][0] != -1 && bulletRow == aliens[i][0] && bulletCol == aliens[i][1]) {
+            // collision detected
+            aliens[i][0] = -1; // deactivates the alien
+            aliens[i][1] = -1;
+            bulletRow = -1;    // removes the bullet
+            bulletCol = -1;
+            score++;           // increments the score
+        }
+    }
+}
+
+
+int isGameOver() {
+    for (int i = 0; i < MAX_ALIENS; i++) {
+        if (aliens[i][0] == spaceshipRow && aliens[i][1] == spaceshipCol) {
+            return 1; // Game over
+        }
+    }
+    return 0;
 }

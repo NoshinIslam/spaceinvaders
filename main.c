@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
-#include <conio.h> // For getch()
+#include <conio.h> 
 
 #define MAX_ALIENS 4
 #define SCREEN_WIDTH 30
@@ -8,11 +8,11 @@
 
 
 
-int spaceshipRow = 18, spaceshipCol = 15; // spaceship position
-int bulletRow = -1, bulletCol = -1; //bullet position
+int spaceshipRow = 18, spaceshipCol = 15; 
+int bulletRow = -1, bulletCol = -1; 
 int aliens[MAX_ALIENS][2];
 int score = 0;
-int alienMoveCounter = 0; // Counter to control alien movement speed
+int alienMoveCounter = 0; 
 
 
 void displaySpaceship() {
@@ -25,16 +25,16 @@ void clearScreen() {
 
 void moveSpaceship(char key) {
     switch (key) {
-        case 'A': case 'a': // moves left
+        case 'A': case 'a': 
             if (spaceshipCol > 1) spaceshipCol--;
             break;
-        case 'D': case 'd': // moves right
+        case 'D': case 'd': 
             if (spaceshipCol < SCREEN_WIDTH) spaceshipCol++;
             break;
-        case 'W': case 'w': // moves up
+        case 'W': case 'w': 
             if (spaceshipRow > 1) spaceshipRow--;
             break;
-        case 'S': case 's': // moves down
+        case 'S': case 's': 
             if (spaceshipRow < SCREEN_HEIGHT) spaceshipRow++;
             break;
     }
@@ -42,7 +42,7 @@ void moveSpaceship(char key) {
 
 
 void shootBullet() {
-    if (bulletRow == -1) { // only one bullet can exist at a time
+    if (bulletRow == -1) { 
         bulletRow = spaceshipRow - 1;
         bulletCol = spaceshipCol;
     }
@@ -50,58 +50,58 @@ void shootBullet() {
 
 void updateBullet() {
     if (bulletRow != -1) {
-        bulletRow--; // moves the bullet upward
-        if (bulletRow < 1) { // if the bullet goes off the screen
+        bulletRow--; 
+        if (bulletRow < 1) { 
             bulletRow = -1;
             bulletCol = -1;
         }
     }
 }
 
-
+void displayAliens() {
+    for (int i = 0; i < MAX_ALIENS; i++) {
+        if (aliens[i][0] != -1) { 
+            printf("\033[%d;%dHV\n", aliens[i][0], aliens[i][1]);
+        }
+    }
+}
 
 void spawnAliens() {
     for (int i = 0; i < MAX_ALIENS; i++) {
-        if (aliens[i][0] == -1) { // if an alien is not active
-            aliens[i][0] = 1;                // spawn at the top row
-            aliens[i][1] = 1 + rand() % 30;  // random columnn
+        if (aliens[i][0] == -1) { 
+            aliens[i][0] = 1;                
+            aliens[i][1] = 1 + rand() % 30;  
         }
     }
 }
 
 void moveAliens() {
     for (int i = 0; i < MAX_ALIENS; i++) {
-        if (aliens[i][0] != -1) { // if an alien is active
-            aliens[i][0]++; // moves downward
-            if (aliens[i][0] > SCREEN_HEIGHT) { // if the alien goes off the screen
-                aliens[i][0] = -1; // deactivates the alien
+        if (aliens[i][0] != -1) { 
+            aliens[i][0]++; 
+            if (aliens[i][0] > SCREEN_HEIGHT) { 
+                aliens[i][0] = -1; 
                 aliens[i][1] = -1;
             }
         }
     }
 
-    // Randomly spawn new aliens
-    if (rand() % 10 < 3) { // 30% chance to spawn a new alien
+
+    if (rand() % 10 < 3) { 
         spawnAliens();
     }
 }
-void displayAliens() {
-    for (int i = 0; i < MAX_ALIENS; i++) {
-        if (aliens[i][0] != -1) { // if an alien is active
-            printf("\033[%d;%dHV\n", aliens[i][0], aliens[i][1]);
-        }
-    }
-}
+
 void checkCollisions() {
     for (int i = 0; i < MAX_ALIENS; i++) {
-        // checks if bullet and alien occupy the same position
+  
         if (aliens[i][0] != -1 && bulletRow == aliens[i][0] && bulletCol == aliens[i][1]) {
-            // collision detected
-            aliens[i][0] = -1; // deactivates the alien
+           
+            aliens[i][0] = -1; 
             aliens[i][1] = -1;
-            bulletRow = -1;    // removes the bullet
+            bulletRow = -1;    
             bulletCol = -1;
-            score++;           // increments the score
+            score++;           
         }
     }
 }
@@ -110,7 +110,7 @@ void checkCollisions() {
 int isGameOver() {
     for (int i = 0; i < MAX_ALIENS; i++) {
         if (aliens[i][0] == spaceshipRow && aliens[i][1] == spaceshipCol) {
-            return 1; // Game over
+            return 1; 
         }
     }
     return 0;
@@ -121,7 +121,7 @@ int main() {
 
 
     for (int i = 0; i < MAX_ALIENS; i++) {
-        aliens[i][0] = -1; // -1 means alien is not active
+        aliens[i][0] = -1; 
         aliens[i][1] = -1;
     }
 
@@ -131,7 +131,7 @@ int main() {
 
         displaySpaceship();
         displayAliens();
-        if (bulletRow != -1) { // if a bullet exists
+        if (bulletRow != -1) { 
             printf("\033[%d;%dH|\n", bulletRow, bulletCol);
         }
 
@@ -143,7 +143,7 @@ int main() {
         }
 
 
-        if (_kbhit()) { // Check if a key is pressed
+        if (_kbhit()) { 
             key = _getch();
             if (key == 'A' || key == 'a' || key == 'D' || key == 'd' ||
                 key == 'W' || key == 'w' || key == 'S' || key == 's') {
@@ -155,7 +155,7 @@ int main() {
 
         updateBullet();
 
-        // slower alien movement: update only every 5 game iterations
+      
         alienMoveCounter++;
         if (alienMoveCounter >= 5) {
             moveAliens();
@@ -164,7 +164,7 @@ int main() {
 
         checkCollisions();
 
-        // delays for smooth gameplay
+     
         Sleep(100);
     }
 
